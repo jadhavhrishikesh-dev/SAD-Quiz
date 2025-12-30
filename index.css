@@ -1,0 +1,604 @@
+
+/* index.css - Quiz Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+:root {
+    --app-bg: #09090b;
+    --card-bg: #18181b;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.5);
+    --border: #27272a;
+    --success: #22c55e;
+    --error: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--app-bg);
+    color: var(--text-primary);
+    overflow: hidden; /* Prevent body scroll, handle inside app */
+    overscroll-behavior: none;
+}
+
+.immersive-app {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* === MENU === */
+.menu-container {
+    z-index: 10;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    max-height: 100dvh;
+    overflow-y: auto;
+}
+
+.title-gradient {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.config-section {
+    padding-bottom: 40px;
+}
+
+.config-section h3 {
+    margin-top: 1.5rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.bank-options, .type-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+button {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+button:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.start-button {
+    margin-top: 30px;
+    background: white;
+    color: black;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 16px 40px;
+    border-radius: 99px;
+    width: 100%;
+    max-width: 300px;
+}
+.start-button:hover {
+    background: #e2e8f0;
+    transform: scale(1.02);
+}
+
+/* === QUIZ ACTIVE === */
+.quiz-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.quiz-header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.progress {
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.card-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    padding: 16px;
+    overflow: hidden; /* Prevent scroll here, card handles it */
+}
+
+.controls {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.controls button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    white-space: nowrap;
+}
+
+.jump-control {
+    display: flex;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.jump-control input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 0 12px;
+    border-radius: 6px;
+    width: 60px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.jump-control button {
+    padding: 12px 16px;
+    flex: 0 0 auto;
+}
+
+/* === CARD FLIP ANIMATION === */
+.question-card-container {
+    width: 100%;
+    max-width: 700px;
+    height: 100%;
+    max-height: 500px;
+    cursor: pointer;
+    position: relative;
+}
+
+.card-flipper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.question-card-container.revealed .card-flipper {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 24px;
+    background: #18181b;
+    border: 1px solid var(--border);
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: #1c1c1f;
+    border-color: rgba(255,255,255,0.1);
+}
+
+.card-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.1);
+    padding: 4px 10px;
+    border-radius: 99px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.card-content h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.question-text {
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.answer-text {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #4ade80; /* Green answer */
+    margin-bottom: 1.5rem;
+}
+
+.explanation-box {
+    background: rgba(255,255,255,0.05);
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #d4d4d8;
+}
+
+.tap-hint {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    padding-top: 16px;
+}
+
+/* === MATCHING GAME STYLES === */
+.question-card-container.matching-mode {
+    max-width: 900px;
+    height: 100%;
+    max-height: 600px;
+    cursor: default;
+}
+
+.card-static {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    background: #18181b;
+    border: 1px solid var(--border);
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.matching-title {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.matching-content {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.matching-widget {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    height: 100%;
+}
+
+.matching-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    padding-right: 4px;
+    padding-bottom: 20px; /* Space for scroll */
+}
+
+.col-header {
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background: #18181b;
+    padding: 8px 0;
+    z-index: 2;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.match-item {
+    padding: 10px 12px;
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: all 0.2s;
+    width: 100%;
+    color: var(--text-primary);
+    white-space: normal;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.match-item:hover:not(:disabled) {
+    background: rgba(255,255,255,0.08);
+}
+
+.match-item.term {
+    font-weight: 600;
+}
+
+.match-item.selected {
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+.match-item.clickable {
+    cursor: pointer;
+}
+.match-item.clickable:active {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.match-item.solved {
+    border-color: var(--success);
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.05);
+    opacity: 0.5;
+}
+
+.match-item.error {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    border-color: var(--error);
+    color: var(--error);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* === DRAWER NAVIGATOR === */
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+    backdrop-filter: blur(2px);
+}
+
+.drawer-content {
+    background: #18181b;
+    width: 350px;
+    max-width: 85vw; /* Safe width on mobile */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+.drawer-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    padding: 4px;
+    line-height: 1;
+}
+
+.drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 10px;
+}
+
+.nav-item {
+    aspect-ratio: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.nav-item.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.icon-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .title-gradient { font-size: 2rem; }
+    
+    .question-card-container { 
+        max-height: none;
+        height: 100%; /* Fill available space */
+        padding-bottom: 0;
+    }
+    
+    .card-front, .card-back {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .question-text { font-size: 1.25rem; }
+    .answer-text { font-size: 1.25rem; }
+    
+    .controls { 
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .controls button {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .jump-control {
+        display: none; /* Hide jump input on mobile to save space, rely on map */
+    }
+    
+    .question-card-container.matching-mode {
+        height: 100%;
+        max-height: none;
+    }
+    
+    .card-static {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .matching-widget {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
+        gap: 20px;
+    }
+    
+    /* When stacked, show Terms then Definitions. */
+    .matching-col {
+        max-height: 40vh; /* Limit height of each section so users can scroll individually or see both */
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .match-item {
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+
+    .menu-container {
+        padding: 16px;
+    }
+    
+    .start-button {
+        width: 100%;
+        padding: 14px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
